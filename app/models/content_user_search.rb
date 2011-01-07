@@ -25,7 +25,7 @@ class ContentUserSearch < DomainModel
   end
 
   def self.searches(from, duration, intervals, opts={})
-    DomainLogGroup.stats(self.name, from, duration, intervals) do |from, duration|
+    DomainLogGroup.stats('ContentSearchKeyword', from, duration, intervals) do |from, duration|
       self.searches_scope from, duration, opts
     end
   end
