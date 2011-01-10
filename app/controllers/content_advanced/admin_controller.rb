@@ -10,8 +10,15 @@ class ContentAdvanced::AdminController < ModuleController
                                            [:config, 'Configure Content Advanced', 'Configure Content Advanced']
                                           ]
 
+  content_model :content_advanced
+
   register_handler :webiva, :search_stats, 'ContentSearchKeyword'
 
   permit 'content_advanced_config'
 
+  public
+ 
+  def self.get_content_advanced_info
+    [{:name => 'Searches', :url => {:controller => '/content_advanced/manage', :action => 'searches'}}]
+  end
 end
