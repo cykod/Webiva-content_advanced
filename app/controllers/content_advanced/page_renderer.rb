@@ -21,16 +21,21 @@ class ContentAdvanced::PageRenderer < ParagraphRenderer
     @options = paragraph_options :most_viewed_content
     from = @options.days_ago.days.ago.at_midnight
     duration = (@options.days_ago + 1).days
+
     groups = ContentNode.traffic from, duration, 1
     group = groups[0]
     target_ids = group.domain_log_stats.find(:all, :order => 'hits DESC', :limit => @options.limit).collect(&:target_id)
     @most_viewed = ContentNode.all :conditions => {:id => target_ids}
+
     groups = Comment.commented from, duration, 1
     group = groups[0]
     target_ids = group.domain_log_stats.collect(&:target_id)
     @most_commented = ContentNode.all :conditions => {:id => target_ids}
 
-    @most_shared = []
+    groups = Share::EmailFriend.emailed from, duration, 1
+    group = groups[0]
+    target_ids = group.domain_log_stats.collect(&:target_id)
+    @most_shared = ContentNode.all :conditions => {:id => target_ids}
     render_paragraph :feature => :content_advanced_page_most_viewed_content
   end
 end
