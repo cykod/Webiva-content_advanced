@@ -1,0 +1,13 @@
+<% active_table_for :searches_table, @active_table_output,
+                    :style => 'width:100%',
+                    :actions => [['Approve', 'approve'], ['Disapprove', 'disapprove']] do |t| %>
+<tr <%= highlight_row 'search',t.id %> >
+  <td align='left' nowrap='1'><%= entry_checkbox "search", t.id %></td>
+  <td><%= h t.keyword %></td>
+  <td align="center"><%= t.has_results ? 'Yes'.t : 'No'.t %></td>
+  <td align="center"><%= t.approved ? 'Yes'.t : 'No'.t %></td>
+  <td align="center"><%= t.num_searches %></td>
+  <td align="center"><%= t.created_at ? t.created_at.strftime(DEFAULT_DATETIME_FORMAT.t) : '-' %></td>
+  <td align="center"><%= t.updated_at ? t.updated_at.strftime(DEFAULT_DATETIME_FORMAT.t) : '-' %></td>
+</tr>
+<% end -%>
