@@ -24,7 +24,13 @@ class ContentAdvanced::PageRenderer < ParagraphRenderer
     groups = ContentNode.traffic from, duration, 1
     group = groups[0]
     target_ids = group.domain_log_stats.find(:all, :order => 'hits DESC', :limit => @options.limit).collect(&:target_id)
-    @most_viewed_contents = ContentNode.find :all, :conditions => {:id => target_ids}
+    @most_viewed = ContentNode.all :conditions => {:id => target_ids}
+    groups = Comment.commented from, duration, 1
+    group = groups[0]
+    target_ids = group.domain_log_stats.collect(&:target_id)
+    @most_commented = ContentNode.all :conditions => {:id => target_ids}
+
+    @most_shared = []
     render_paragraph :feature => :content_advanced_page_most_viewed_content
   end
 end
