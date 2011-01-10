@@ -14,7 +14,6 @@ describe ContentSearchKeyword do
   it "should be able to create a keyword" do
     @keyword = ContentSearchKeyword.create(:keyword => "Fake Post")
     @keyword.id.should_not be_nil
-    @keyword.keyword.should == 'Fake post'
   end
 
   describe "Users" do
@@ -34,6 +33,7 @@ describe ContentSearchKeyword do
       end
       @search.domain_log_visitor_id.should be_nil
       @search.end_user_id.should == @user1.id
+      @search.content_search_keyword.keyword.should == "My search"
 
       assert_difference 'ContentSearchKeyword.count', 0 do
         assert_difference 'ContentUserSearch.count', 1 do
