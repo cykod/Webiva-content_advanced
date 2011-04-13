@@ -15,7 +15,7 @@ class ContentAdvanced::PageFeature < ParagraphFeature
     webiva_feature(:content_advanced_page_search_trends,data) do |c|
       c.loop_tag('keyword') { |t| data[:keywords] }
       c.h_tag('keyword:name') { |t| t.locals.keyword.keyword }
-      c.link_tag('keyword:search') { |t| "#{data[:options].search_page_url}?q=#{CGI.escape t.locals.keyword.keyword}" }
+      c.link_tag('keyword:search') { |t| "#{data[:options].search_page_url}?q=#{CGI.escape t.locals.keyword.keyword}&skip=1" }
     end
   end
 
