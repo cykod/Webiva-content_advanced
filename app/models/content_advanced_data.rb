@@ -24,7 +24,7 @@ class ContentAdvancedData
 
       @most_shared = ContentNodeValue.all :conditions => {:content_node_id => target_ids}
 
-      output = [ @most_viewed, @most_commented, @most_shared ]
+      output =  { :most_viewed => @most_viewed, :most_commented => @most_commented, :most_shared =>  @most_shared  }
       DomainModel.remote_cache_put(args, output )
 
       return output

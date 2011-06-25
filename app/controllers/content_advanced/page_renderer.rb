@@ -29,11 +29,17 @@ class ContentAdvanced::PageRenderer < ParagraphRenderer
       from = @options.days_ago.days.ago.at_midnight
       duration = (@options.days_ago + 1).days
 
-      @most_viewed, @most_commented, @most_shared = delayed_cache_fetch(ContentAdvancedData,:most_viewed_content,
+      data = delayed_cache_fetch(ContentAdvancedData,:most_viewed_content,
                                                                     { :from => from, :duration => duration,
                                                                       :limit => @options.limit },
                                                                        
                                                                        nil,:expires => 5)
+      
+      if data
+        @most_viewed = data[:most_viewed]
+        @most_commented = data[:most_commented]
+        @most_shared = data[:most_shared] 
+      end
 
       if @most_viewed 
         cache[:output] = content_advanced_page_most_viewed_content_feature
