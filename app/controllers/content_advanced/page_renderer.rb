@@ -29,22 +29,17 @@ class ContentAdvanced::PageRenderer < ParagraphRenderer
       from = @options.days_ago.days.ago.at_midnight
       duration = (@options.days_ago + 1).days
 
-      groups = ContentNode.traffic from, duration, 1
-      group = groups[0]
-      target_ids = group.domain_log_stats.find(:all, :order => 'hits DESC', :limit => @options.limit).collect(&:target_id)
-      @most_viewed = ContentNodeValue.all :conditions => {:content_node_id => target_ids}
+      @most_viewed, @most_commented, @most_shared = delayed_cache_fetch(ContentAdvancedData,:most_viewed_content,
+                                                                    { :from => from, :duration => duration,
+                                                                      :limit => @options.limit },
+                                                                       
+                                                                       nil,:expires => 5)
 
-      groups = Comment.commented from, duration, 1
-      group = groups[0]
-      target_ids = group.domain_log_stats.find(:all,:order => 'hits DESC', :limit => @options.limit).collect(&:target_id)
-      @most_commented = ContentNodeValue.all :conditions => {:content_node_id => target_ids}
-
-      groups = Share::EmailFriend.emailed from, duration, 1
-      group = groups[0]
-      target_ids = group.domain_log_stats.find(:all,:order => 'hits DESC', :limit => @options.limit).collect(&:target_id)
-
-      @most_shared = ContentNodeValue.all :conditions => {:content_node_id => target_ids}
-      cache[:output] = content_advanced_page_most_viewed_content_feature
+      if @most_viewed 
+        cache[:output] = content_advanced_page_most_viewed_content_feature
+      else 
+        return render_paragraph :text => ''
+      end
     end
     render_paragraph :text => results.output
   end
